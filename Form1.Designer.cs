@@ -30,10 +30,11 @@
         {
             this.ChooseFileBtn = new System.Windows.Forms.Button();
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.SaveFileBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ProgramText = new System.Windows.Forms.RichTextBox();
             this.ObjectText = new System.Windows.Forms.RichTextBox();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,22 +54,24 @@
             // OpenFileDialog1
             // 
             this.OpenFileDialog1.FileName = "OpenFileDialog1";
+            this.OpenFileDialog1.Filter = "Assembler files (*.asm)|*.asm";
             // 
-            // button1
+            // SaveFileBtn
             // 
-            this.button1.BackColor = System.Drawing.Color.ForestGreen;
-            this.button1.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(200, 100);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Сохранить";
-            this.button1.UseVisualStyleBackColor = false;
+            this.SaveFileBtn.BackColor = System.Drawing.Color.ForestGreen;
+            this.SaveFileBtn.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SaveFileBtn.ForeColor = System.Drawing.Color.White;
+            this.SaveFileBtn.Location = new System.Drawing.Point(3, 3);
+            this.SaveFileBtn.Name = "SaveFileBtn";
+            this.SaveFileBtn.Size = new System.Drawing.Size(200, 100);
+            this.SaveFileBtn.TabIndex = 1;
+            this.SaveFileBtn.Text = "Сохранить";
+            this.SaveFileBtn.UseVisualStyleBackColor = false;
+            this.SaveFileBtn.Click += new System.EventHandler(this.button1_Click);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.SaveFileBtn);
             this.panel1.Controls.Add(this.ChooseFileBtn);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
@@ -121,10 +124,11 @@
 
         private System.Windows.Forms.Button ChooseFileBtn;
         private System.Windows.Forms.OpenFileDialog OpenFileDialog1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button SaveFileBtn;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RichTextBox ProgramText;
         private System.Windows.Forms.RichTextBox ObjectText;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 
