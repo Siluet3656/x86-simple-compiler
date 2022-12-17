@@ -16,5 +16,15 @@ namespace x86_simple_compiler
         {
             InitializeComponent();
         }
+
+        private void ChooseFileBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ObjectText.BackColor = SystemColors.Window;
+        }
     }
 }
