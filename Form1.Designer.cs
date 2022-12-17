@@ -104,6 +104,10 @@
             this.ObjectText.TabIndex = 4;
             this.ObjectText.Text = "";
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "Assembler files (*.asm)|*.asm";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

@@ -31,7 +31,7 @@ namespace x86_simple_compiler
                 try
                 {
                     ProgramText.Clear();
-                    ProgramText.Text = File.ReadAllText(OpenFileDialog1.FileName);
+                    ProgramText.LoadFile(OpenFileDialog1.FileName);
                 }
                 catch (SecurityException ex)
                 {
@@ -39,11 +39,32 @@ namespace x86_simple_compiler
                     $"Дополнителная информация:\n\n{ex.StackTrace}");
                 }
             }
+            else
+            {
+                MessageBox.Show($"Файл {saveFileDialog1.FileName} не удалось открыть!");
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    ProgramText.SaveFile(saveFileDialog1.FileName);
+                    MessageBox.Show($"Файл {saveFileDialog1.FileName} успешно сохранён!");
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show($"Ошибка при сохранении.\n\nПричина: {ex.Message}\n\n" +
+                    $"Дополнителная информация:\n\n{ex.StackTrace}");
+                }
+                
+            }
+            else
+            {
+                MessageBox.Show($"Файл {saveFileDialog1.FileName} не удалось сохранить!");
+            }
         }
     }
 }
