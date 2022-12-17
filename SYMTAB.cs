@@ -2,21 +2,11 @@
 
 namespace x86_simple_compiler
 {
-    enum ResultStatus
-    {
-        OK,
-        SymbolNameAlreadyExist,
-        SymbolNameDoesNotExist,
-        SymbolNameIsTooLong,
-        UnknownError
-    }
     internal class SYMTAB
     {
         private static SYMTAB single = null;
         private Dictionary<string, int> Table = new Dictionary<string, int>();
         private const int MaxLenght = 32;
-
-        protected SYMTAB() { }
 
         public static SYMTAB Init()
         {

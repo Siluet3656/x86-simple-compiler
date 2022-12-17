@@ -6,6 +6,15 @@ using System.Windows.Forms;
 
 namespace x86_simple_compiler
 {
+    enum ResultStatus
+    {
+        OK,
+        SymbolNameAlreadyExist,
+        SymbolNameDoesNotExist,
+        SymbolNameIsTooLong,
+        OpDoesNotExist,
+        UnknownError
+    }
     internal static class Program
     {
         [STAThread]
