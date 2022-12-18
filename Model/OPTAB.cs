@@ -8,6 +8,13 @@ namespace x86_simple_compiler
 {
     internal class OPTAB
     {
+        struct Operation
+        {
+            string OpName;
+            int OpCode;
+            int OpLength;
+        }
+
         private static OPTAB single = null;
 
         protected OPTAB() { }
