@@ -10,14 +10,39 @@ namespace x86_simple_compiler
     {
         struct Operation
         {
-            string OpName;
-            int OpCode;
-            int OpLength;
+            private string OpName;
+            private int OpCode;
+            private int OpLength;
+
+            public Operation(string v1, int v2, int v3) : this()
+            {
+                this.OpName = v1;
+                this.OpCode = v2;
+                this.OpLength = v3;
+            }
+
+            public string GetOpName()
+            { return this.OpName; }
+
+            public int GetOpCode()
+            { return this.OpCode; }
+
+            public int GetOpLenght()
+            { return this.OpLength; }
         }
 
         private static OPTAB single = null;
+        private List<Operation> Operations = new List<Operation>();
 
-        protected OPTAB() { }
+        protected OPTAB()
+        {
+            Operations.Add(new Operation("NOP", 0x90, 1));
+            Operations.Add(new Operation("JG", 0x7F, 2));
+            Operations.Add(new Operation("ADD", 0, 2));
+            Operations.Add(new Operation("ROR", 0, 2));
+            Operations.Add(new Operation("DEC", 0, 2));
+            Operations.Add(new Operation("XOR", 0, 2));
+        }
 
         public static OPTAB Init()
         {
@@ -26,6 +51,23 @@ namespace x86_simple_compiler
                 single = new OPTAB();
             }
             return single;
+        }
+
+        public ResultStatus GetCodeByName(string Name, out int OpCode, out int OpLenght)
+        {
+            OpCode = -1;
+            OpLenght = -1;
+            foreach (Operation op in Operations)
+            {
+                if (op.GetOpName() == Name)
+                {
+                    OpCode = op.GetOpCode();
+                    OpLenght = op.GetOpLenght();
+                    return ResultStatus.OK;
+                }
+
+            }
+            return ResultStatus.SymbolNameDoesNotExist;
         }
     }
 }
