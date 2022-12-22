@@ -9,9 +9,16 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using x86_simple_compiler.Controller;
 
 namespace x86_simple_compiler
 {
+    enum KeySymbols
+    {
+        Dot = '.',
+        Comma = ',',
+        Space = ' '
+    }
     public partial class Form1 : Form
     {
         public Form1()
@@ -59,11 +66,37 @@ namespace x86_simple_compiler
                     MessageBox.Show($"Ошибка при сохранении.\n\nПричина: {ex.Message}\n\n" +
                     $"Дополнителная информация:\n\n{ex.StackTrace}");
                 }
-                
+
             }
             else
             {
                 MessageBox.Show($"Файл {saveFileDialog1.FileName} не удалось сохранить!");
+            }
+        }
+
+        private void CompileBtn_Click(object sender, EventArgs e)
+        {
+            Parser parser = Parser.Init();
+            string[] Lines;
+
+            if (ProgramText.Text != string.Empty)
+            {
+                parser.ParseText(ProgramText.Text, out Lines);
+
+                for (int i = 0; i < Lines.Length; i++)
+                {
+                    if (Lines[i][0] == (char)KeySymbols.Dot)
+                    {
+
+                    }
+                    else
+                    {
+                        for (int j = 0; j < Lines[i].Length; j++)
+                        {
+
+                        }
+                    }
+                }
             }
         }
     }

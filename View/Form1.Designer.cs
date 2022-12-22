@@ -32,6 +32,7 @@
             this.OpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SaveFileBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CompileBtn = new System.Windows.Forms.Button();
             this.ProgramText = new System.Windows.Forms.RichTextBox();
             this.ObjectText = new System.Windows.Forms.RichTextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -71,12 +72,26 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.CompileBtn);
             this.panel1.Controls.Add(this.SaveFileBtn);
             this.panel1.Controls.Add(this.ChooseFileBtn);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(207, 210);
+            this.panel1.Size = new System.Drawing.Size(207, 321);
             this.panel1.TabIndex = 2;
+            // 
+            // CompileBtn
+            // 
+            this.CompileBtn.BackColor = System.Drawing.Color.Purple;
+            this.CompileBtn.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CompileBtn.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.CompileBtn.Location = new System.Drawing.Point(4, 215);
+            this.CompileBtn.Name = "CompileBtn";
+            this.CompileBtn.Size = new System.Drawing.Size(200, 100);
+            this.CompileBtn.TabIndex = 5;
+            this.CompileBtn.Text = "Компилировать";
+            this.CompileBtn.UseVisualStyleBackColor = false;
+            this.CompileBtn.Click += new System.EventHandler(this.CompileBtn_Click);
             // 
             // ProgramText
             // 
@@ -133,6 +148,7 @@
         private System.Windows.Forms.RichTextBox ProgramText;
         private System.Windows.Forms.RichTextBox ObjectText;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button CompileBtn;
     }
 }
 
