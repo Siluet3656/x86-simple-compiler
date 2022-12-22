@@ -77,7 +77,11 @@ namespace x86_simple_compiler
         private void CompileBtn_Click(object sender, EventArgs e)
         {
             Parser parser = Parser.Init();
+            OPTAB optab = OPTAB.Init();
+            SYMTAB symtab = SYMTAB.Init();
             string[] Lines;
+            string[] LineParts;
+            string Operation, Arg1, Arg2;
 
             if (ProgramText.Text != string.Empty)
             {
@@ -91,9 +95,16 @@ namespace x86_simple_compiler
                     }
                     else
                     {
+                        int[] Address = new int[Lines.Length + 1];
+                        Address[0] = 0;
                         for (int j = 0; j < Lines[i].Length; j++)
                         {
+                            LineParts = Lines[i].Split((char)KeySymbols.Space);
+                            Operation = LineParts[0];
+                            Arg1 = LineParts[1];
+                            Arg2 = LineParts[2];
 
+                            Address[j + 1] = optab.GetOpLength(Operation, Arg1, Arg2);
                         }
                     }
                 }

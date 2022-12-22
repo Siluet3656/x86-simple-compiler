@@ -42,7 +42,13 @@ namespace x86_simple_compiler.Controller
             }
 
             Lines = Text.Split('\n');
-            return;
+
+            for (int i = 0; i < Lines.Length; i++)
+            {
+                Lines[i] = Lines[i].Trim();
+            }
+
+                return;
         }
     }
 

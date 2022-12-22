@@ -69,5 +69,10 @@ namespace x86_simple_compiler
             }
             return ResultStatus.SymbolNameDoesNotExist;
         }
+
+        public int GetOpLength(string operation, string arg1, string arg2)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
