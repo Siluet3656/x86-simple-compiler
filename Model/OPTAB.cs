@@ -13,12 +13,14 @@ namespace x86_simple_compiler
             private string OpName;
             private int OpCode;
             private int OpLength;
+            private int AmountOfArgs;
 
-            public Operation(string v1, int v2, int v3) : this()
+            public Operation(string v1, int v2, int v3, int v4) : this()
             {
                 this.OpName = v1;
                 this.OpCode = v2;
                 this.OpLength = v3;
+                this.AmountOfArgs = v4;
             }
 
             public string GetOpName()
@@ -29,6 +31,11 @@ namespace x86_simple_compiler
 
             public int GetOpLenght()
             { return this.OpLength; }
+
+            public int GetAmountOfArgs()
+            {
+                return this.AmountOfArgs;
+            }
         }
 
         private static OPTAB single = null;
@@ -36,12 +43,12 @@ namespace x86_simple_compiler
 
         protected OPTAB()
         {
-            Operations.Add(new Operation("NOP", 0x90, 1));
-            Operations.Add(new Operation("JG", 0x7F, 2));
-            Operations.Add(new Operation("ADD", 0, 2));
-            Operations.Add(new Operation("ROR", 0, 2));
-            Operations.Add(new Operation("DEC", 0, 2));
-            Operations.Add(new Operation("XOR", 0, 2));
+            Operations.Add(new Operation("NOP", 0x90, 1, 0));
+            Operations.Add(new Operation("JG", 0x7F, 2, 1));
+            Operations.Add(new Operation("ADD", 0, 2, 2));
+            Operations.Add(new Operation("ROR", 0, 2, 2));
+            Operations.Add(new Operation("DEC", 0, 2, 1));
+            Operations.Add(new Operation("XOR", 0, 2, 2));
         }
 
         public static OPTAB Init()
@@ -99,9 +106,45 @@ namespace x86_simple_compiler
         {
             foreach (Operation op in Operations)
             {
-                if (op.Equals(operation))
+                if (op.GetOpName() == operation)
                 {
                     return op.GetOpLenght();
+                }
+            }
+            return -1;
+        }
+
+        public int GetOpLength(string operation, string arg1)
+        {
+            foreach (Operation op in Operations)
+            {
+                if (op.GetOpName() == operation)
+                {
+                    return op.GetOpLenght();
+                }
+            }
+            return -1;
+        }
+
+        public int GetOpLength(string operation)
+        {
+            foreach (Operation op in Operations)
+            {
+                if (op.GetOpName() == operation)
+                {
+                    return op.GetOpLenght();
+                }
+            }
+            return -1;
+        }
+
+        public int GetOpAmountOfArgs (string operation)
+        {
+            foreach (Operation op in Operations)
+            {
+                if (op.GetOpName() == operation)
+                {
+                    return op.GetAmountOfArgs();
                 }
             }
             return -1;

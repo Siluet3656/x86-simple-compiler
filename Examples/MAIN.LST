@@ -1,0 +1,64 @@
+Turbo Assembler	 Version 4.1	    12/23/22 16:50:12	    Page 1
+Main.ASM
+
+
+
+      1				     .286
+      2	0000			     .MODEL SMALL
+      3	0000			     .DATA
+      4	0000  0F			 A DB 15
+      5	0001  07			 B DB 7
+      6	0002			     .CODE
+      7	0000				 Main proc
+      8	0000  32 C0		     XOR al,al
+      9	0002  32 DB			     XOR bl,bl
+     10	0004  90			     NOP
+     11	0005  90			     NOP
+     12	0006  90			     NOP
+     13	0007  D0 C8			     ROR al, 1
+     14	0009  C0 CB 09		       M1: ROR bl, 9
+     15	000C  02 C3			     ADD al, bl
+     16	000E  02 06 0000r		     ADD al, A
+     17	0012  02 06 0001r		     ADD al, B
+     18	0016  7F F1			     JG	M1
+     19	0018  FE CB			     DEC bl
+     20	001A  90			     NOP
+     21	001B  90			     NOP
+     22	001C  90			     NOP
+     23	001D				 Main endp
+     24				     END
+Turbo Assembler	 Version 4.1	    12/23/22 16:50:12	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "12/23/22"
+??FILENAME			  Text	 "Main	  "
+??TIME				  Text	 "16:50:12"
+??VERSION			  Number 040A
+@32BIT				  Text	 0
+@CODE				  Text	 _TEXT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0707H
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 MAIN
+@INTERFACE			  Text	 000H
+@MODEL				  Text	 2
+@STACK				  Text	 DGROUP
+@WORDSIZE			  Text	 2
+A				  Byte	 DGROUP:0000
+B				  Byte	 DGROUP:0001
+M1				  Near	 _TEXT:0009
+MAIN				  Near	 _TEXT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  16  0002 Word	  Public  DATA
+_TEXT				  16  001D Word	  Public  CODE
+

@@ -83,8 +83,11 @@ namespace x86_simple_compiler
             SYMTAB symtab = SYMTAB.Init();
             string[] Lines;
             string[] LineParts;
-            string Operation, Arg1, Arg2;
+            string Operation;
+            string[] Args;
+            string Arg;
             int CurrentAddress = 0;
+            int AmountOfArgs = 0;
 
             const string Main = "MAIN";
             const string End = "END";
@@ -94,6 +97,7 @@ namespace x86_simple_compiler
                 parser.ParseText(ProgramText.Text, out Lines);
                 int[] Address = new int[Lines.Length + 1];
                 Address[0] = 0;
+                int j = 0;
 
                 for (int i = 0; i < Lines.Length; i++)
                 {
@@ -117,7 +121,7 @@ namespace x86_simple_compiler
                                 {
                                     if (LineParts[0][LineParts[0].Length - 1] == (char)KeySymbols.TwoDots)
                                     {
-                                        //symtab.AddSymbleName(LineParts[0], ); метка
+                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(CurrentAddress, "NONE"));
                                     }
                                     else
                                     {
@@ -126,31 +130,39 @@ namespace x86_simple_compiler
                                 }
                                 else if (symtab.TryToGetSymbolNameValue(LineParts[0]) == ResultStatus.OK)
                                 {
-
+                                    MessageBox.Show("СИМВОЛЬНЫЕ ИМЕНА ПОВТОРЯЮТСЯ!!!!");
                                 }
                             }
                             else if (optab.GetCodeByName(LineParts[0]) == ResultStatus.OK)
                             {
-
+                                Operation = LineParts[0];
+                                j++;
+                                AmountOfArgs = optab.GetOpAmountOfArgs(LineParts[0]);
+                                switch (AmountOfArgs)
+                                {
+                                    case 0:
+                                        Address[j] = optab.GetOpLength(Operation);
+                                        break;
+                                    case 1:
+                                        Arg = LineParts[1];
+                                        Address[j] = optab.GetOpLength(Operation, Arg);
+                                        break;
+                                    case 2:
+                                        Args = LineParts[1].Split((char)KeySymbols.Comma);
+                                        Address[j] = optab.GetOpLength(Operation, Args[0], Args[1]);
+                                        break;
+                                }
+                                
+                                if (Address[j] > 0)
+                                {
+                                    CurrentAddress += Address[j];
+                                }
                             }
-                            //for (int j = 0; j < Lines[i].Length; j++)
-                            //{
-
-                            //    Operation = LineParts[0];
-                            //    Arg1 = LineParts[1];
-                            //    Arg2 = LineParts[2];
-
-                            //    Address[j + 1] = optab.GetOpLength(Operation, Arg1, Arg2);
-
-                            //    if (Address[j + 1] > 0)
-                            //    {
-                            //        CurrentAddress += Address[j + 1];
-                            //    }
-                            //}
                         }
                     }
                 }
             }
+
         }
     }
 }
