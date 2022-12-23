@@ -40,7 +40,7 @@ namespace x86_simple_compiler
                 try
                 {
                     ProgramText.Clear();
-                    ProgramText.LoadFile(OpenFileDialog1.FileName, RichTextBoxStreamType.UnicodePlainText);
+                    ProgramText.LoadFile(OpenFileDialog1.FileName, RichTextBoxStreamType.PlainText);
                 }
                 catch (SecurityException ex)
                 {
@@ -60,7 +60,7 @@ namespace x86_simple_compiler
             {
                 try
                 {
-                    ProgramText.SaveFile(saveFileDialog1.FileName, RichTextBoxStreamType.UnicodePlainText);
+                    ProgramText.SaveFile(saveFileDialog1.FileName, RichTextBoxStreamType.PlainText);
                     MessageBox.Show($"Файл {saveFileDialog1.FileName} успешно сохранён!");
                 }
                 catch (SecurityException ex)
@@ -116,6 +116,13 @@ namespace x86_simple_compiler
                                 if (symtab.TryToGetSymbolNameValue(LineParts[0]) == ResultStatus.SymbolNameDoesNotExist)
                                 {
                                     if (LineParts[0][LineParts[0].Length - 1] == (char)KeySymbols.TwoDots)
+                                    {
+                                        //symtab.AddSymbleName(LineParts[0], ); метка
+                                    }
+                                    else
+                                    {
+                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(Int32.Parse(LineParts[2]), LineParts[1]));
+                                    }
                                 }
                                 else if (symtab.TryToGetSymbolNameValue(LineParts[0]) == ResultStatus.OK)
                                 {
