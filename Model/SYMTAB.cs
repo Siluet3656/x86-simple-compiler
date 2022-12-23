@@ -39,6 +39,29 @@ namespace x86_simple_compiler
             return ResultStatus.UnknownError;
         }
 
+        public ResultStatus TryToGetSymbolNameValue(string SymbolName)
+        {
+            int Value = 0;
+            if (SymbolName.Length > MaxLenght)
+            {
+                return ResultStatus.SymbolNameIsTooLong;
+            }
+
+            if (!Table.ContainsKey(SymbolName))
+            {
+                return ResultStatus.SymbolNameDoesNotExist;
+            }
+
+            Table.TryGetValue(SymbolName, out Value);
+
+            if (Table.ContainsKey(SymbolName))
+            {
+                return ResultStatus.OK;
+            }
+
+            return ResultStatus.UnknownError;
+        }
+
         public ResultStatus TryToGetSymbolNameValue(string SymbolName, out int Value)
         {
             Value = 0;

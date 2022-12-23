@@ -53,6 +53,31 @@ namespace x86_simple_compiler
             return single;
         }
 
+        public ResultStatus GetCodeByName(string Name)
+        {
+            foreach (Operation op in Operations)
+            {
+                if (op.GetOpName() == Name)
+                {
+                    return ResultStatus.OK;
+                }
+            }
+            return ResultStatus.OpDoesNotExist;
+        }
+        public ResultStatus GetCodeByName(string Name, out int OpCode)
+        {
+            OpCode = -1;
+            foreach (Operation op in Operations)
+            {
+                if (op.GetOpName() == Name)
+                {
+                    OpCode = op.GetOpCode();
+                    return ResultStatus.OK;
+                }
+
+            }
+            return ResultStatus.SymbolNameDoesNotExist;
+        }
         public ResultStatus GetCodeByName(string Name, out int OpCode, out int OpLenght)
         {
             OpCode = -1;
@@ -72,7 +97,14 @@ namespace x86_simple_compiler
 
         public int GetOpLength(string operation, string arg1, string arg2)
         {
-            throw new NotImplementedException();
+            foreach (Operation op in Operations)
+            {
+                if (op.Equals(operation))
+                {
+                    return op.GetOpLenght();
+                }
+            }
+            return -1;
         }
     }
 }

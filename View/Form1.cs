@@ -17,8 +17,10 @@ namespace x86_simple_compiler
     {
         Dot = '.',
         Comma = ',',
-        Space = ' '
+        Space = ' ',
+        TwoDots = ':'
     }
+
     public partial class Form1 : Form
     {
         public Form1()
@@ -38,7 +40,7 @@ namespace x86_simple_compiler
                 try
                 {
                     ProgramText.Clear();
-                    ProgramText.LoadFile(OpenFileDialog1.FileName);
+                    ProgramText.LoadFile(OpenFileDialog1.FileName, RichTextBoxStreamType.UnicodePlainText);
                 }
                 catch (SecurityException ex)
                 {
@@ -58,7 +60,7 @@ namespace x86_simple_compiler
             {
                 try
                 {
-                    ProgramText.SaveFile(saveFileDialog1.FileName);
+                    ProgramText.SaveFile(saveFileDialog1.FileName, RichTextBoxStreamType.UnicodePlainText);
                     MessageBox.Show($"Файл {saveFileDialog1.FileName} успешно сохранён!");
                 }
                 catch (SecurityException ex)
@@ -82,10 +84,16 @@ namespace x86_simple_compiler
             string[] Lines;
             string[] LineParts;
             string Operation, Arg1, Arg2;
+            int CurrentAddress = 0;
+
+            const string Main = "MAIN";
+            const string End = "END";
 
             if (ProgramText.Text != string.Empty)
             {
                 parser.ParseText(ProgramText.Text, out Lines);
+                int[] Address = new int[Lines.Length + 1];
+                Address[0] = 0;
 
                 for (int i = 0; i < Lines.Length; i++)
                 {
@@ -95,16 +103,43 @@ namespace x86_simple_compiler
                     }
                     else
                     {
-                        int[] Address = new int[Lines.Length + 1];
-                        Address[0] = 0;
-                        for (int j = 0; j < Lines[i].Length; j++)
-                        {
-                            LineParts = Lines[i].Split((char)KeySymbols.Space);
-                            Operation = LineParts[0];
-                            Arg1 = LineParts[1];
-                            Arg2 = LineParts[2];
+                        LineParts = Lines[i].Split((char)KeySymbols.Space);
 
-                            Address[j + 1] = optab.GetOpLength(Operation, Arg1, Arg2);
+                        if (LineParts[0] == Main || LineParts[0] == End)
+                        {
+
+                        }
+                        else
+                        {
+                            if (optab.GetCodeByName(LineParts[0]) == ResultStatus.OpDoesNotExist)
+                            {
+                                if (symtab.TryToGetSymbolNameValue(LineParts[0]) == ResultStatus.SymbolNameDoesNotExist)
+                                {
+                                    if (LineParts[0][LineParts[0].Length - 1] == (char)KeySymbols.TwoDots)
+                                }
+                                else if (symtab.TryToGetSymbolNameValue(LineParts[0]) == ResultStatus.OK)
+                                {
+
+                                }
+                            }
+                            else if (optab.GetCodeByName(LineParts[0]) == ResultStatus.OK)
+                            {
+
+                            }
+                            //for (int j = 0; j < Lines[i].Length; j++)
+                            //{
+
+                            //    Operation = LineParts[0];
+                            //    Arg1 = LineParts[1];
+                            //    Arg2 = LineParts[2];
+
+                            //    Address[j + 1] = optab.GetOpLength(Operation, Arg1, Arg2);
+
+                            //    if (Address[j + 1] > 0)
+                            //    {
+                            //        CurrentAddress += Address[j + 1];
+                            //    }
+                            //}
                         }
                     }
                 }
