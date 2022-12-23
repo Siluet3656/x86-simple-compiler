@@ -15,12 +15,12 @@ namespace x86_simple_compiler
             private int OpLength;
             private int AmountOfArgs;
 
-            public Operation(string v1, int v2, int v3, int v4) : this()
+            public Operation(string OpName, int OpCode, int OpLength, int AmountOfArgs) : this()
             {
-                this.OpName = v1;
-                this.OpCode = v2;
-                this.OpLength = v3;
-                this.AmountOfArgs = v4;
+                this.OpName = OpName;
+                this.OpCode = OpCode;
+                this.OpLength = OpLength;
+                this.AmountOfArgs = AmountOfArgs;
             }
 
             public string GetOpName()
@@ -45,8 +45,8 @@ namespace x86_simple_compiler
         {
             Operations.Add(new Operation("NOP", 0x90, 1, 0));
             Operations.Add(new Operation("JG", 0x7F, 2, 1));
-            Operations.Add(new Operation("ADD", 0, 2, 2));
-            Operations.Add(new Operation("ROR", 0, 2, 2));
+            Operations.Add(new Operation("ADD", 0, 3, 2));
+            Operations.Add(new Operation("ROR", 0, 3, 2));
             Operations.Add(new Operation("DEC", 0, 2, 1));
             Operations.Add(new Operation("XOR", 0, 2, 2));
         }

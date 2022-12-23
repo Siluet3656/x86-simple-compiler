@@ -11,13 +11,15 @@ namespace x86_simple_compiler
     }
     struct SymbolNameInfo
     {
+        public int Adr;
         public int Value;
         public string Type;
 
-        public SymbolNameInfo(int value, string type)
+        public SymbolNameInfo(int value, string type, int adr)
         {
             this.Type = type;
             this.Value = value;
+            this.Adr = adr;
         }
     }
     internal class SYMTAB
@@ -40,6 +42,19 @@ namespace x86_simple_compiler
             if (SymbolName.Length > MaxLenght)
             {
                 return ResultStatus.SymbolNameIsTooLong;
+            }
+
+            switch (Info.Type)
+            {
+                case "DB":
+                    Info.Type = "BYTE";
+                    break;
+                case "DW":
+                    Info.Type = "WORD";
+                    break;
+                case "DD":
+                    Info.Type = "DWORD";
+                    break;
             }
 
             if (Table.ContainsKey(SymbolName))
@@ -82,7 +97,7 @@ namespace x86_simple_compiler
 
         public ResultStatus TryToGetSymbolNameValue(string SymbolName, out SymbolNameInfo info)
         {
-            info = new SymbolNameInfo(0, VarType.NONE);
+            info = new SymbolNameInfo(0, VarType.NONE, 0);
             if (SymbolName.Length > MaxLenght)
             {
                 return ResultStatus.SymbolNameIsTooLong;

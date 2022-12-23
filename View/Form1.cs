@@ -86,7 +86,8 @@ namespace x86_simple_compiler
             string Operation;
             string[] Args;
             string Arg;
-            int CurrentAddress = 0;
+            int CurrentCodeAddress = 0;
+            int CurrentDataAddress = 0;
             int AmountOfArgs = 0;
 
             const string Main = "MAIN";
@@ -121,11 +122,12 @@ namespace x86_simple_compiler
                                 {
                                     if (LineParts[0][LineParts[0].Length - 1] == (char)KeySymbols.TwoDots)
                                     {
-                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(CurrentAddress, "NONE"));
+                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(0, "NONE", CurrentCodeAddress));
                                     }
                                     else
                                     {
-                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(Int32.Parse(LineParts[2]), LineParts[1]));
+                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(Int32.Parse(LineParts[2]), LineParts[1], CurrentDataAddress));
+                                        CurrentDataAddress++;
                                     }
                                 }
                                 else if (symtab.TryToGetSymbolNameValue(LineParts[0]) == ResultStatus.OK)
@@ -155,14 +157,15 @@ namespace x86_simple_compiler
                                 
                                 if (Address[j] > 0)
                                 {
-                                    CurrentAddress += Address[j];
+                                    CurrentCodeAddress += Address[j];
                                 }
                             }
                         }
                     }
                 }
-            }
+                /////////////////2nd pass
 
+            }
         }
     }
 }
