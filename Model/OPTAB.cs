@@ -15,6 +15,9 @@ namespace x86_simple_compiler
             private int OpLength;
             private int AmountOfArgs;
 
+            public const int alCode = 000;
+            public const int blCode = 011;
+
             public Operation(string OpName, int OpCode, int OpLength, int AmountOfArgs) : this()
             {
                 this.OpName = OpName;
@@ -45,10 +48,12 @@ namespace x86_simple_compiler
         {
             Operations.Add(new Operation("NOP", 0x90, 1, 0));
             Operations.Add(new Operation("JG", 0x7F, 2, 1));
-            Operations.Add(new Operation("ADD", 0, 3, 2));
-            Operations.Add(new Operation("ROR", 0, 3, 2));
-            Operations.Add(new Operation("DEC", 0, 2, 1));
-            Operations.Add(new Operation("XOR", 0, 2, 2));
+            Operations.Add(new Operation("ADD r8 r8", 0x02, 3, 2));
+            Operations.Add(new Operation("ADD r8 m8", 0x02, 3, 2));
+            Operations.Add(new Operation("ROR r8 1", 0xD0, 3, 2));
+            Operations.Add(new Operation("ROR r8 i8", 0xC0, 3, 2));
+            Operations.Add(new Operation("DEC", 0xFE, 2, 1));
+            Operations.Add(new Operation("XOR r8 r8", 0x32, 2, 2));
         }
 
         public static OPTAB Init()
@@ -138,7 +143,7 @@ namespace x86_simple_compiler
             return -1;
         }
 
-        public int GetOpAmountOfArgs (string operation)
+        public int GetOpAmountOfArgs(string operation)
         {
             foreach (Operation op in Operations)
             {
