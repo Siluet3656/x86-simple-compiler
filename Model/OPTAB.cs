@@ -50,7 +50,7 @@ namespace x86_simple_compiler
             Operations.Add(new Operation("JG", 0x7F, 2, 1));
             Operations.Add(new Operation("ADD r8 r8", 0x02, 3, 2));
             Operations.Add(new Operation("ADD r8 m8", 0x02, 3, 2));
-            Operations.Add(new Operation("ROR r8 1", 0xD0, 3, 2));
+            Operations.Add(new Operation("ROR r8 1", 0xD0, 2, 2));
             Operations.Add(new Operation("ROR r8 i8", 0xC0, 3, 2));
             Operations.Add(new Operation("DEC", 0xFE, 2, 1));
             Operations.Add(new Operation("XOR r8 r8", 0x32, 2, 2));
@@ -67,9 +67,11 @@ namespace x86_simple_compiler
 
         public ResultStatus GetCodeByName(string Name)
         {
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == Name)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == Name)
                 {
                     return ResultStatus.OK;
                 }
@@ -79,9 +81,11 @@ namespace x86_simple_compiler
         public ResultStatus GetCodeByName(string Name, out int OpCode)
         {
             OpCode = -1;
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == Name)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == Name)
                 {
                     OpCode = op.GetOpCode();
                     return ResultStatus.OK;
@@ -94,9 +98,11 @@ namespace x86_simple_compiler
         {
             OpCode = -1;
             OpLenght = -1;
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == Name)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == Name)
                 {
                     OpCode = op.GetOpCode();
                     OpLenght = op.GetOpLenght();
@@ -109,9 +115,11 @@ namespace x86_simple_compiler
 
         public int GetOpLength(string operation, string arg1, string arg2)
         {
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == operation)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == operation)
                 {
                     return op.GetOpLenght();
                 }
@@ -121,9 +129,11 @@ namespace x86_simple_compiler
 
         public int GetOpLength(string operation, string arg1)
         {
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == operation)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == operation)
                 {
                     return op.GetOpLenght();
                 }
@@ -133,9 +143,11 @@ namespace x86_simple_compiler
 
         public int GetOpLength(string operation)
         {
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == operation)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == operation)
                 {
                     return op.GetOpLenght();
                 }
@@ -145,9 +157,11 @@ namespace x86_simple_compiler
 
         public int GetOpAmountOfArgs(string operation)
         {
+            String[] OpPattern;
             foreach (Operation op in Operations)
             {
-                if (op.GetOpName() == operation)
+                OpPattern = op.GetOpName().Split(' ');
+                if (OpPattern[0] == operation)
                 {
                     return op.GetAmountOfArgs();
                 }
