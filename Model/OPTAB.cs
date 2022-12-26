@@ -8,6 +8,11 @@ namespace x86_simple_compiler
 {
     internal class OPTAB
     {
+        enum Registers
+        {
+            AL,
+            BL
+        }
         struct Operation
         {
             private string OpName;

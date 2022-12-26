@@ -154,7 +154,7 @@ namespace x86_simple_compiler
                                         Address[j] = optab.GetOpLength(Operation, Args[0], Args[1]);
                                         break;
                                 }
-                                
+
                                 if (Address[j] > 0)
                                 {
                                     CurrentCodeAddress += Address[j];
@@ -164,7 +164,28 @@ namespace x86_simple_compiler
                     }
                 }
                 /////////////////2nd pass
+                for (int i = 0; i < Lines.Length; i++)
+                {
+                    if (Lines[i][0] == (char)KeySymbols.Dot)
+                    {
 
+                    }
+                    else
+                    {
+                        LineParts = Lines[i].Split((char)KeySymbols.Space);
+
+                        if (LineParts[0] == Main || LineParts[0] == End)
+                        {
+
+                        }
+                        else
+                        {
+                            if (optab.GetCodeByName(LineParts[0]) == ResultStatus.OK)
+                            {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
