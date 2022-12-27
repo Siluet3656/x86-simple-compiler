@@ -167,7 +167,7 @@ namespace x86_simple_compiler
                     }
                 }
                 /////////////////2nd pass
-                int[] OpCodes = new int[OpsCounter + 1];
+                int[] OpCodes = new int[OpsCounter];
                 j = 0;
 
                 for (int i = 0; i < Lines.Length; i++)
@@ -236,7 +236,8 @@ namespace x86_simple_compiler
                                         OpCodes[j] = OpCodes[j] << 24;
                                         break;
                                 }
-                                int ConstPart = 0, FirstReg = 0, SecondReg = 0, Mod = 0, Mem = 0;
+                                int ConstPart = 0, FirstReg = 0, SecondReg = 0, Mod = 0, Mem = 0, disp = 0;
+
                                 switch (Operation)
                                 {
                                     case "XOR":
@@ -295,6 +296,19 @@ namespace x86_simple_compiler
                                             OpCodes[j] = OpCodes[j] + Mod + FirstReg + SecondReg + Mem;
                                         }
                                         break;
+                                    case "DEC":
+                                        ConstPart = 0b_11001 << 3;
+                                        FirstReg = Registers.blCode;
+                                        OpCodes[j] = OpCodes[j] + ConstPart + FirstReg;
+                                        break;
+                                    case "JG":
+                                        SymbolNameInfo infoo;
+                                        if (symtab.TryToGetSymbolNameInfo(LineParts[1], out infoo) == ResultStatus.OK)
+                                        {
+                                            disp = infoo.Adr - (CalculateAdr(Address,10) + optab.GetOpLength(Operation));
+                                        }
+                                        OpCodes[j] = OpCodes[j] + disp;
+                                        break;
                                 }
                                 j++;
                             }
@@ -302,6 +316,17 @@ namespace x86_simple_compiler
                     }
                 }
             }
+        }
+
+        private int CalculateAdr(int[] address, int v)
+        {
+            int Sum = 0;
+            for (int i = 0; i <= v; i++)
+            {
+                Sum += address[i];
+            }
+
+            return Sum;
         }
     }
 }
