@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace x86_simple_compiler
 {
@@ -54,6 +55,9 @@ namespace x86_simple_compiler
                     break;
                 case "DD":
                     Info.Type = "DWORD";
+                    break;
+                case "MARK":
+                    SymbolName = SymbolName.Remove(SymbolName.Length - 1,1);
                     break;
             }
 
@@ -116,6 +120,21 @@ namespace x86_simple_compiler
             }
 
             return ResultStatus.UnknownError;
+        }
+
+        public ResultStatus TryToFindSymbolName(string SymbolName)
+        {
+            if (SymbolName != null)
+            {
+                foreach (String sn in Table.Keys)
+                {
+                    if (sn == SymbolName)
+                    {
+                        return ResultStatus.OK;
+                    }
+                }
+            }
+            return ResultStatus.SymbolNameDoesNotExist;
         }
     }
 }

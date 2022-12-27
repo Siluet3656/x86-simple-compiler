@@ -89,6 +89,7 @@ namespace x86_simple_compiler
             int CurrentCodeAddress = 0;
             int CurrentDataAddress = 0;
             int AmountOfArgs = 0;
+            int OpsCounter = 0;
 
             const string Main = "MAIN";
             const string End = "END";
@@ -122,7 +123,7 @@ namespace x86_simple_compiler
                                 {
                                     if (LineParts[0][LineParts[0].Length - 1] == (char)KeySymbols.TwoDots)
                                     {
-                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(0, "NONE", CurrentCodeAddress));
+                                        symtab.AddSymbleName(LineParts[0], new SymbolNameInfo(0, "MARK", CurrentCodeAddress));
                                     }
                                     else
                                     {
@@ -158,12 +159,17 @@ namespace x86_simple_compiler
                                 if (Address[j] > 0)
                                 {
                                     CurrentCodeAddress += Address[j];
+                                    OpsCounter++;
                                 }
                             }
                         }
                     }
                 }
                 /////////////////2nd pass
+
+                int[] OpCodes = new int[OpsCounter + 1];
+                j = 0;
+
                 for (int i = 0; i < Lines.Length; i++)
                 {
                     if (Lines[i][0] == (char)KeySymbols.Dot)
@@ -182,6 +188,27 @@ namespace x86_simple_compiler
                         {
                             if (optab.GetCodeByName(LineParts[0]) == ResultStatus.OK)
                             {
+                                Operation = LineParts[0];
+                                if (LineParts.Length > 1)
+                                {
+                                    Args = LineParts[1].Split((char)KeySymbols.Comma);
+                                }
+                                else
+                                {
+                                    Args = new string[3];
+                                }
+
+                                switch (LineParts.Length)
+                                {
+                                    case 1:
+                                        optab.GetCodeByName(Operation, out OpCodes[j]);
+                                        break;
+                                    case 2:
+                                        optab.GetCodeByName(Operation, Args, out OpCodes[j]);
+                                        break;
+                                }
+
+                                j++;
                             }
                         }
                     }

@@ -51,13 +51,19 @@ namespace x86_simple_compiler
 
         protected OPTAB()
         {
+            //1-m 2-r 3-i 4-other
             Operations.Add(new Operation("NOP", 0x90, 1, 0));
-            Operations.Add(new Operation("JG", 0x7F, 2, 1));
-            Operations.Add(new Operation("ADD r8 r8", 0x02, 3, 2));
+
+            Operations.Add(new Operation("JG m8", 0x7F, 2, 1));
+
             Operations.Add(new Operation("ADD r8 m8", 0x02, 3, 2));
-            Operations.Add(new Operation("ROR r8 1", 0xD0, 2, 2));
+            Operations.Add(new Operation("ADD r8 r8", 0x02, 3, 2));
+
             Operations.Add(new Operation("ROR r8 i8", 0xC0, 3, 2));
-            Operations.Add(new Operation("DEC", 0xFE, 2, 1));
+            Operations.Add(new Operation("ROR r8 1", 0xD0, 2, 2));
+
+            Operations.Add(new Operation("DEC r8", 0xFE, 2, 1));
+
             Operations.Add(new Operation("XOR r8 r8", 0x32, 2, 2));
         }
 
@@ -97,25 +103,121 @@ namespace x86_simple_compiler
                 }
 
             }
-            return ResultStatus.SymbolNameDoesNotExist;
+            return ResultStatus.OpDoesNotExist;
         }
-        public ResultStatus GetCodeByName(string Name, out int OpCode, out int OpLenght)
+        public ResultStatus GetCodeByName(string Name, string[] Args, out int OpCode)
         {
             OpCode = -1;
-            OpLenght = -1;
             String[] OpPattern;
-            foreach (Operation op in Operations)
-            {
-                OpPattern = op.GetOpName().Split(' ');
-                if (OpPattern[0] == Name)
-                {
-                    OpCode = op.GetOpCode();
-                    OpLenght = op.GetOpLenght();
-                    return ResultStatus.OK;
-                }
+            SYMTAB symtab = SYMTAB.Init();
 
+            if (Args.Length == 1)
+            {
+                foreach (Operation op in Operations)
+                {
+                    OpPattern = op.GetOpName().Split(' ');
+                    if (OpPattern[0] == Name)
+                    {
+                        if (OpPattern[1] == "m8")
+                        {
+                            if (symtab.TryToFindSymbolName(Args[0]) == ResultStatus.OK)
+                            {
+                                OpCode = op.GetOpCode();
+                                return ResultStatus.OK;
+                            }
+                        }
+                        else if (OpPattern[1] == "r8")
+                        {
+                            OpCode = op.GetOpCode();
+                            return ResultStatus.OK;
+                        }
+                    }
+                }
             }
-            return ResultStatus.SymbolNameDoesNotExist;
+            else
+            {
+                foreach (Operation op in Operations)
+                {
+                    OpPattern = op.GetOpName().Split(' ');
+                    if (OpPattern[0] == Name)
+                    {
+                        if (OpPattern[1] == "m8")
+                        {
+                            if (OpPattern[2] == "m8")
+                            {
+                                if (symtab.TryToFindSymbolName(Args[0]) == ResultStatus.OK)
+                                    if (symtab.TryToFindSymbolName(Args[1]) == ResultStatus.OK)
+                                    {
+                                        OpCode = op.GetOpCode();
+                                        return ResultStatus.OK;
+                                    }
+                            }
+                            else if (OpPattern[2] == "r8")
+                            {
+                                if (symtab.TryToFindSymbolName(Args[0]) == ResultStatus.OK)
+                                {
+                                    OpCode = op.GetOpCode();
+                                    return ResultStatus.OK;
+                                }
+                            }
+                            else if (OpPattern[2] == "i8")
+                            {
+                                if (symtab.TryToFindSymbolName(Args[0]) == ResultStatus.OK)
+                                {
+                                    if (Int32.Parse(Args[1]) > 1)
+                                    {
+                                        OpCode = op.GetOpCode();
+                                        return ResultStatus.OK;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (symtab.TryToFindSymbolName(Args[0]) == ResultStatus.OK)
+                                {
+                                    OpCode = op.GetOpCode();
+                                    return ResultStatus.OK;
+                                }
+                            }
+                        }
+                        else if (OpPattern[1] == "r8")
+                        {
+                            if (OpPattern[2] == "m8")
+                            {
+                                if (symtab.TryToFindSymbolName(Args[1]) == ResultStatus.OK)
+                                {
+                                    OpCode = op.GetOpCode();
+                                    return ResultStatus.OK;
+                                }
+                            }
+                            else if (OpPattern[2] == "r8")
+                            {
+                                OpCode = op.GetOpCode();
+                                return ResultStatus.OK;
+                            }
+                            else if (OpPattern[2] == "i8")
+                            {
+                                int OUT;
+                                if (Int32.TryParse(Args[1], out OUT))
+                                {
+                                    if (OUT > 1)
+                                    {
+                                        OpCode = op.GetOpCode();
+                                        return ResultStatus.OK;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                OpCode = op.GetOpCode();
+                                return ResultStatus.OK;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ResultStatus.UnknownError;
         }
 
         public int GetOpLength(string operation, string arg1, string arg2)
@@ -126,7 +228,17 @@ namespace x86_simple_compiler
                 OpPattern = op.GetOpName().Split(' ');
                 if (OpPattern[0] == operation)
                 {
-                    return op.GetOpLenght();
+                    if (operation == "ROR")
+                    {
+                        if (arg2 == OpPattern[2])
+                        {
+                            return op.GetOpLenght();
+                        }
+                    }
+                    else
+                    {
+                        return op.GetOpLenght();
+                    }
                 }
             }
             return -1;
