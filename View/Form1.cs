@@ -305,7 +305,7 @@ namespace x86_simple_compiler
                                         SymbolNameInfo infoo;
                                         if (symtab.TryToGetSymbolNameInfo(LineParts[1], out infoo) == ResultStatus.OK)
                                         {
-                                            disp = infoo.Adr - (CalculateAdr(Address,10) + optab.GetOpLength(Operation));
+                                            disp = infoo.Adr - (CalculateAdr(Address, 10) + optab.GetOpLength(Operation));
                                         }
                                         OpCodes[j] = OpCodes[j] + disp;
                                         break;
@@ -315,7 +315,37 @@ namespace x86_simple_compiler
                         }
                     }
                 }
+                ////Object file genetation
+                string FileName = OpenFileDialog1.FileName;
+                FileName = RemoveFullPathAndGetOnlyName(FileName);
+
+                ObjectText.Text += "80";
+                ObjectText.Text += (FileName.Length + 0x2).ToString("X2");
+                ObjectText.Text += "0008";
+                ObjectText.Text += FileName;
+                ObjectText.Text += "BA";
+                ObjectText.Text += "ºˆ \u001cTurbo Assembler  Version 4.1™ˆ\u0010@éPŠ›U\b";
+                ObjectText.Text += FileName;
+                ObjectText.Text += "¹ˆ\u0003@éL–\u0002hˆ\u0003@¡”–\f\u0005_TEXT\u0004CODE–˜\aH\u001d\u0002\u0003\u0001ö–\f\u0005_DATA\u0004DATAÂ˜\aH\u0002\u0004\u0005\u0001\r\n–\b\u0006DGROUP‹š\u0004\u0006ÿ\u0002[ˆ\u0004@¢\u0001‘ !\u00012À2Û";
+                for (int i = 0; i < OpCodes.Length; i++)
+                {
+                    ObjectText.Text += OpCodes[i].ToString("X2");
+                }
+                ObjectText.Text += "¤œ\vÄ\u0010\u0014\u0001\u0002Ä\u0014\u0014\u0001\u0002\u007f \u0006\u0002\u000f\aBŠ\u0002t";
             }
+        }
+
+        private string RemoveFullPathAndGetOnlyName(string fileName)
+        {
+            for (int i = fileName.Length - 1; i > 0; i--)
+            {
+                if (fileName[i] == '\\')
+                {
+                    fileName = fileName.Remove(0, i + 1);
+                    break;
+                }
+            }
+            return fileName;
         }
 
         private int CalculateAdr(int[] address, int v)
@@ -327,6 +357,28 @@ namespace x86_simple_compiler
             }
 
             return Sum;
+        }
+
+        private void ObjSaveBtn_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    ObjectText.SaveFile(saveFileDialog2.FileName, RichTextBoxStreamType.PlainText);
+                    MessageBox.Show($"Файл {saveFileDialog2.FileName} успешно сохранён!");
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show($"Ошибка при сохранении.\n\nПричина: {ex.Message}\n\n" +
+                    $"Дополнителная информация:\n\n{ex.StackTrace}");
+                }
+
+            }
+            else
+            {
+                MessageBox.Show($"Файл {saveFileDialog2.FileName} не удалось сохранить!");
+            }
         }
     }
 }

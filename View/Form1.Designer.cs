@@ -36,6 +36,8 @@
             this.ProgramText = new System.Windows.Forms.RichTextBox();
             this.ObjectText = new System.Windows.Forms.RichTextBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.ObjSaveBtn = new System.Windows.Forms.Button();
+            this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -123,11 +125,30 @@
             // 
             this.saveFileDialog1.Filter = "Assembler files (*.asm)|*.asm";
             // 
+            // ObjSaveBtn
+            // 
+            this.ObjSaveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ObjSaveBtn.BackColor = System.Drawing.Color.DarkGreen;
+            this.ObjSaveBtn.Font = new System.Drawing.Font("Cambria", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ObjSaveBtn.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.ObjSaveBtn.Location = new System.Drawing.Point(12, 452);
+            this.ObjSaveBtn.Name = "ObjSaveBtn";
+            this.ObjSaveBtn.Size = new System.Drawing.Size(200, 100);
+            this.ObjSaveBtn.TabIndex = 6;
+            this.ObjSaveBtn.Text = "Сохранить объектный файл";
+            this.ObjSaveBtn.UseVisualStyleBackColor = false;
+            this.ObjSaveBtn.Click += new System.EventHandler(this.ObjSaveBtn_Click);
+            // 
+            // saveFileDialog2
+            // 
+            this.saveFileDialog2.Filter = "Object file (*.OBJ)|*.OBJ";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1287, 564);
+            this.Controls.Add(this.ObjSaveBtn);
             this.Controls.Add(this.ObjectText);
             this.Controls.Add(this.ProgramText);
             this.Controls.Add(this.panel1);
@@ -149,6 +170,8 @@
         private System.Windows.Forms.RichTextBox ObjectText;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button CompileBtn;
+        private System.Windows.Forms.Button ObjSaveBtn;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog2;
     }
 }
 
