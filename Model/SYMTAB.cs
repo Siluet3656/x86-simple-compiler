@@ -99,7 +99,7 @@ namespace x86_simple_compiler
             return ResultStatus.UnknownError;
         }
 
-        public ResultStatus TryToGetSymbolNameValue(string SymbolName, out SymbolNameInfo info)
+        public ResultStatus TryToGetSymbolNameInfo(string SymbolName, out SymbolNameInfo info)
         {
             info = new SymbolNameInfo(0, VarType.NONE, 0);
             if (SymbolName.Length > MaxLenght)
@@ -124,6 +124,11 @@ namespace x86_simple_compiler
 
         public ResultStatus TryToFindSymbolName(string SymbolName)
         {
+            if (SymbolName.Length > MaxLenght)
+            {
+                return ResultStatus.SymbolNameIsTooLong;
+            }
+
             if (SymbolName != null)
             {
                 foreach (String sn in Table.Keys)

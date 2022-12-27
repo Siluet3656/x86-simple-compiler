@@ -6,22 +6,20 @@ using System.Threading.Tasks;
 
 namespace x86_simple_compiler
 {
+    struct Registers
+    {
+        public const int alCode = 0b_000;
+        public const int blCode = 0b_011;
+    }
     internal class OPTAB
     {
-        enum Registers
-        {
-            AL,
-            BL
-        }
+
         struct Operation
         {
             private string OpName;
             private int OpCode;
             private int OpLength;
             private int AmountOfArgs;
-
-            public const int alCode = 000;
-            public const int blCode = 011;
 
             public Operation(string OpName, int OpCode, int OpLength, int AmountOfArgs) : this()
             {
@@ -56,8 +54,8 @@ namespace x86_simple_compiler
 
             Operations.Add(new Operation("JG m8", 0x7F, 2, 1));
 
-            Operations.Add(new Operation("ADD r8 m8", 0x02, 3, 2));
-            Operations.Add(new Operation("ADD r8 r8", 0x02, 3, 2));
+            Operations.Add(new Operation("ADD r8 m8", 0x02, 4, 2));
+            Operations.Add(new Operation("ADD r8 r8", 0x02, 2, 2));
 
             Operations.Add(new Operation("ROR r8 i8", 0xC0, 3, 2));
             Operations.Add(new Operation("ROR r8 1", 0xD0, 2, 2));
@@ -233,6 +231,24 @@ namespace x86_simple_compiler
                         if (arg2 == OpPattern[2])
                         {
                             return op.GetOpLenght();
+                        }
+                        else if (Int32.Parse(arg2) > 1)
+                        {
+                            if (OpPattern[2] == "i8")
+                            {
+                                return op.GetOpLenght();
+                            }
+                        }
+                    }
+                    else if (operation == "ADD")
+                    {
+                        if (arg2 == "BL")
+                        {
+                            return 2;
+                        }
+                        else if (arg2 == "A" || arg2 == "B")
+                        {
+                            return 4;
                         }
                     }
                     else

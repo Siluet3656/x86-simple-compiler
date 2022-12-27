@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -166,7 +167,6 @@ namespace x86_simple_compiler
                     }
                 }
                 /////////////////2nd pass
-
                 int[] OpCodes = new int[OpsCounter + 1];
                 j = 0;
 
@@ -197,7 +197,7 @@ namespace x86_simple_compiler
                                 {
                                     Args = new string[3];
                                 }
-
+                                int OpLength = 1;
                                 switch (LineParts.Length)
                                 {
                                     case 1:
@@ -205,9 +205,97 @@ namespace x86_simple_compiler
                                         break;
                                     case 2:
                                         optab.GetCodeByName(Operation, Args, out OpCodes[j]);
+                                        string[] Argss = LineParts[1].Split((char)KeySymbols.Comma);
+
+                                        switch (Argss.Length)
+                                        {
+                                            case 2:
+                                                OpLength = optab.GetOpLength(Operation, Argss[0], Argss[1]);
+                                                break;
+                                            case 1:
+                                                OpLength = optab.GetOpLength(Operation, Argss[0]);
+                                                break;
+                                            default: OpLength = 0; break;
+                                        }
+
                                         break;
                                 }
 
+
+                                switch (OpLength)
+                                {
+                                    case 1:
+                                        break;
+                                    case 2:
+                                        OpCodes[j] = OpCodes[j] << 8;
+                                        break;
+                                    case 3:
+                                        OpCodes[j] = OpCodes[j] << 16;
+                                        break;
+                                    case 4:
+                                        OpCodes[j] = OpCodes[j] << 24;
+                                        break;
+                                }
+                                int ConstPart = 0, FirstReg = 0, SecondReg = 0, Mod = 0, Mem = 0;
+                                switch (Operation)
+                                {
+                                    case "XOR":
+                                        if (Args[0] == "AL")
+                                        {
+                                            ConstPart = 0b_11 << 6;
+                                            FirstReg = Registers.alCode << 3;
+                                            SecondReg = Registers.alCode;
+                                        }
+                                        else if (Args[0] == "BL")
+                                        {
+                                            ConstPart = 0b_11 << 6;
+                                            FirstReg = Registers.blCode << 3;
+                                            SecondReg = Registers.blCode;
+                                        }
+                                        OpCodes[j] = OpCodes[j] + ConstPart + FirstReg + SecondReg;
+                                        break;
+                                    case "ROR":
+                                        if (Int32.Parse(Args[1]) == 1)
+                                        {
+                                            Mod = 0b_11 << 6;
+                                            ConstPart = 0b_001 << 3;
+                                            FirstReg = Registers.alCode;
+                                            OpCodes[j] = OpCodes[j] + Mod + ConstPart + FirstReg;
+                                        }
+                                        else if (Int32.Parse(Args[1]) > 1)
+                                        {
+                                            Mod = 0b_11 << 14;
+                                            ConstPart = 0b_001 << 11;
+                                            FirstReg = Registers.blCode << 8;
+                                            OpCodes[j] = OpCodes[j] + Mod + ConstPart + FirstReg + Int32.Parse(Args[1]);
+                                        }
+                                        break;
+                                    case "ADD":
+                                        if (Args[1] == "BL")
+                                        {
+                                            ConstPart = 0b_11 << 6;
+                                            FirstReg = Registers.alCode << 3;
+                                            SecondReg = Registers.blCode;
+                                            OpCodes[j] = OpCodes[j] + ConstPart + FirstReg + SecondReg;
+                                        }
+                                        else if (symtab.TryToFindSymbolName(Args[1]) == ResultStatus.OK)
+                                        {
+                                            SymbolNameInfo info = new SymbolNameInfo();
+                                            int buf;
+                                            Mod = 0b_00 << 22;
+                                            FirstReg = Registers.alCode << 19;
+                                            SecondReg = 0b_110 << 16;
+                                            if (symtab.TryToGetSymbolNameInfo(Args[1], out info) == ResultStatus.OK)
+                                            {
+                                                Mem = info.Adr;
+                                                buf = Mem << 8;
+                                                Mem = Mem >> 8;
+                                                Mem = Mem + buf;
+                                            }
+                                            OpCodes[j] = OpCodes[j] + Mod + FirstReg + SecondReg + Mem;
+                                        }
+                                        break;
+                                }
                                 j++;
                             }
                         }
