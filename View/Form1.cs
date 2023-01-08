@@ -24,6 +24,7 @@ namespace x86_simple_compiler
 
     public partial class Form1 : Form
     {
+        private Byte[] ObjectFile;
         public Form1()
         {
             InitializeComponent();
@@ -316,22 +317,8 @@ namespace x86_simple_compiler
                     }
                 }
                 ////Object file genetation
-                string FileName = OpenFileDialog1.FileName;
-                FileName = RemoveFullPathAndGetOnlyName(FileName);
-
-                ObjectText.Text += "80";
-                ObjectText.Text += (FileName.Length + 0x2).ToString("X2");
-                ObjectText.Text += "0008";
-                ObjectText.Text += FileName;
-                ObjectText.Text += "BA";
-                ObjectText.Text += "ºˆ \u001cTurbo Assembler  Version 4.1™ˆ\u0010@éPŠ›U\b";
-                ObjectText.Text += FileName;
-                ObjectText.Text += "¹ˆ\u0003@éL–\u0002hˆ\u0003@¡”–\f\u0005_TEXT\u0004CODE–˜\aH\u001d\u0002\u0003\u0001ö–\f\u0005_DATA\u0004DATAÂ˜\aH\u0002\u0004\u0005\u0001\r\n–\b\u0006DGROUP‹š\u0004\u0006ÿ\u0002[ˆ\u0004@¢\u0001‘ !\u00012À2Û";
-                for (int i = 0; i < OpCodes.Length; i++)
-                {
-                    ObjectText.Text += OpCodes[i].ToString("X2");
-                }
-                ObjectText.Text += "¤œ\vÄ\u0010\u0014\u0001\u0002Ä\u0014\u0014\u0001\u0002\u007f \u0006\u0002\u000f\aBŠ\u0002t";
+                ObjectFileGenerator ObjGen = ObjectFileGenerator.Init();
+                ObjectFile = ObjGen.GenerateObjectFile();
             }
         }
 
@@ -365,8 +352,23 @@ namespace x86_simple_compiler
             {
                 try
                 {
-                    ObjectText.SaveFile(saveFileDialog2.FileName, RichTextBoxStreamType.PlainText);
-                    MessageBox.Show($"Файл {saveFileDialog2.FileName} успешно сохранён!");
+                    //ObjectText.SaveFile(saveFileDialog2.FileName, RichTextBoxStreamType.PlainText);
+
+                    string path = saveFileDialog2.FileName;
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+
+                    using (FileStream fs = File.Create(path))
+                    {
+                        for (int i = 0; i < ObjectFile.Length; i++)
+                        {
+                            fs.WriteByte(ObjectFile[i]);
+                        }
+                    }
+
+                        MessageBox.Show($"Файл {saveFileDialog2.FileName} успешно сохранён!");
                 }
                 catch (SecurityException ex)
                 {
