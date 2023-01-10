@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,8 @@ namespace x86_simple_compiler.Controller
     internal class ObjectFileGenerator
     {
         private static ObjectFileGenerator Single = null;
-        private string SourceNameId = "80";
-        private string SourceAsmVersionId = "88";
-        private Byte[] ObjectFile;
+        private int SourceNameId = 0x80;
+        private int SourceAsmVersionId = 0x88;
         private string ObjectFileView;
 
         protected ObjectFileGenerator()
@@ -30,20 +30,13 @@ namespace x86_simple_compiler.Controller
             return Single;
         }
 
-        private Byte[] StringToByte(string s)
+        public ResultStatus GenerateObjectFile(out List<char> ObjectFile)
         {
-            Byte[] b;
+            ObjectFile = new List<char>();
 
-            b = Encoding.ASCII.GetBytes(s);
+            ObjectFile.Add((char)SourceNameId);
 
-            return b;
-        }
-
-        public Byte[] GenerateObjectFile()
-        {
-            ObjectFile = StringToByte(SourceNameId);
-
-            return ObjectFile;
+            return ResultStatus.OK;
         }
     }
 }

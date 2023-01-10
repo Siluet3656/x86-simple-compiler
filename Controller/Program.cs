@@ -15,6 +15,14 @@ namespace x86_simple_compiler
         OpDoesNotExist,
         UnknownError
     }
+    enum KeySymbols
+    {
+        Dot = '.',
+        Comma = ',',
+        Space = ' ',
+        TwoDots = ':'
+    }
+
     internal static class Program
     {
         [STAThread]

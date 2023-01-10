@@ -14,17 +14,10 @@ using x86_simple_compiler.Controller;
 
 namespace x86_simple_compiler
 {
-    enum KeySymbols
-    {
-        Dot = '.',
-        Comma = ',',
-        Space = ' ',
-        TwoDots = ':'
-    }
-
     public partial class Form1 : Form
     {
-        private Byte[] ObjectFile;
+        private List<char> ObjectFile;
+        private bool IsObjectFileGenerated = false;
         public Form1()
         {
             InitializeComponent();
@@ -318,7 +311,14 @@ namespace x86_simple_compiler
                 }
                 ////Object file genetation
                 ObjectFileGenerator ObjGen = ObjectFileGenerator.Init();
-                ObjectFile = ObjGen.GenerateObjectFile();
+                if (ObjGen.GenerateObjectFile(out ObjectFile) == ResultStatus.OK)
+                {
+                    IsObjectFileGenerated = true;
+                }
+                else
+                {
+                    IsObjectFileGenerated = false;
+                }
             }
         }
 
@@ -350,36 +350,39 @@ namespace x86_simple_compiler
         {
             if (saveFileDialog2.ShowDialog() == DialogResult.OK)
             {
-                try
+                if (IsObjectFileGenerated)
                 {
-                    //ObjectText.SaveFile(saveFileDialog2.FileName, RichTextBoxStreamType.PlainText);
-
-                    string path = saveFileDialog2.FileName;
-                    if (File.Exists(path))
+                    try
                     {
-                        File.Delete(path);
-                    }
+                        //ObjectText.SaveFile(saveFileDialog2.FileName, RichTextBoxStreamType.PlainText);
 
-                    using (FileStream fs = File.Create(path))
-                    {
-                        for (int i = 0; i < ObjectFile.Length; i++)
+                        string path = saveFileDialog2.FileName;
+                        if (File.Exists(path))
                         {
-                            fs.WriteByte(ObjectFile[i]);
+                            File.Delete(path);
                         }
-                    }
+
+                        using (FileStream fs = File.Create(path))
+                        {
+                            foreach (char ch in ObjectFile)
+                            {
+                                fs.WriteByte((byte)ch);
+                            }
+                        }
 
                         MessageBox.Show($"Файл {saveFileDialog2.FileName} успешно сохранён!");
-                }
-                catch (SecurityException ex)
-                {
-                    MessageBox.Show($"Ошибка при сохранении.\n\nПричина: {ex.Message}\n\n" +
-                    $"Дополнителная информация:\n\n{ex.StackTrace}");
-                }
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Ошибка при сохранении.\n\nПричина: {ex.Message}\n\n" +
+                        $"Дополнителная информация:\n\n{ex.StackTrace}");
+                    }
 
-            }
-            else
-            {
-                MessageBox.Show($"Файл {saveFileDialog2.FileName} не удалось сохранить!");
+                }
+                else
+                {
+                    MessageBox.Show($"Файл {saveFileDialog2.FileName} не удалось сохранить!");
+                }
             }
         }
     }
