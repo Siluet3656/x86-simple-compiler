@@ -18,6 +18,7 @@ namespace x86_simple_compiler
     {
         private List<char> ObjectFile;
         private bool IsObjectFileGenerated = false;
+        private string OnlyFileName;
         public Form1()
         {
             InitializeComponent();
@@ -36,6 +37,7 @@ namespace x86_simple_compiler
                 {
                     ProgramText.Clear();
                     ProgramText.LoadFile(OpenFileDialog1.FileName, RichTextBoxStreamType.PlainText);
+                    OnlyFileName = RemoveFullPathAndGetOnlyName(OpenFileDialog1.FileName);
                 }
                 catch (SecurityException ex)
                 {
@@ -311,7 +313,7 @@ namespace x86_simple_compiler
                 }
                 ////Object file genetation
                 ObjectFileGenerator ObjGen = ObjectFileGenerator.Init();
-                if (ObjGen.GenerateObjectFile(out ObjectFile) == ResultStatus.OK)
+                if (ObjGen.GenerateObjectFile(OnlyFileName, out ObjectFile) == ResultStatus.OK)
                 {
                     IsObjectFileGenerated = true;
                 }
@@ -381,8 +383,12 @@ namespace x86_simple_compiler
                 }
                 else
                 {
-                    MessageBox.Show($"Файл {saveFileDialog2.FileName} не удалось сохранить!");
+                    MessageBox.Show($"Объектный файл не сгенерирован!");
                 }
+            }
+            else
+            {
+                MessageBox.Show($"Файл {saveFileDialog2.FileName} не удалось сохранить!");
             }
         }
     }
