@@ -12,16 +12,21 @@ namespace x86_simple_compiler.Controller
     {
         private static ObjectFileGenerator Single = null;
         private string ObjectFileView;
-        private string AssemblerVersion = "My Assembler V0.1";
+        private readonly string AssemblerVersion = "My Assembler V0.1";
 
-        private int FilenameRecordId = 0x80;
-        private int AsmVersionRecordId = 0x88;
-        private byte[] AsmVersionConst = { 0x00, 0x00 };
-        private int AdditionalNameRecordId = 0x88;
-        private byte[] AdditionalRecordConst = { 0x40, 0xE9 };
-        private string UndefinedField = "PŠ›U";
+        private readonly int FilenameRecordId = 0x80;
+        private readonly int AsmVersionRecordId = 0x88;
+        private readonly byte[] AsmVersionConst = { 0x00, 0x00 };
+        private readonly int AdditionalNameRecordId = 0x88;
+        private readonly byte[] AdditionalRecordConst = { 0x40, 0xE9 };
+        private readonly string UndefinedField = "PŠ›U";
         private readonly byte[] CosntRecord = { 0x88, 0x03, 0x00, 0x40, 0xE9, 0x4C, 0x96, 0x02, 0x00, 0x00, 0x68, 0x88, 0x03, 0x00, 0x40, 0xA1, 0x94 };
+        private readonly string _TextSegment = "_TEXT";
+        private readonly string _DataSegment = "_DATA";
+        private readonly string DataSegment = "DATA";
+        private readonly string CodeSegment = "CODE";
 
+        private readonly byte[] ObjectFileEnd = { 0x8A, 0x02, 0x00, 0x00, 0x74 };
 
         protected ObjectFileGenerator()
         {
@@ -114,6 +119,13 @@ namespace x86_simple_compiler.Controller
             for (int i = 0; i < CosntRecord.Length; i++)
             {
                 ObjectFile.Add((char)CosntRecord[i]);
+            }
+
+
+
+            for (int i = 0; i < ObjectFileEnd.Length; i++)
+            {
+                ObjectFile.Add((char)ObjectFileEnd[i]);
             }
 
             return ResultStatus.OK;
