@@ -314,9 +314,62 @@ namespace x86_simple_compiler
                 }
                 ////Object file genetation
                 ObjectFileGenerator ObjGen = ObjectFileGenerator.Init();
-                int[] DATA = { 0 };
+                bool IsFirstNotZeroByteArrieved = false;
+                int[] DATA = null;
+                int CODELenght = 0;
 
-                if (ObjGen.GenerateObjectFile(OnlyFileName, DATA, OpCodes, out ObjectFile) == ResultStatus.OK)
+                for (int i = 0; i < OpCodes.Length; i++)
+                {
+                    byte[] Bytes = new byte[4];
+                    Bytes = DivideINT(OpCodes[i]);
+                    IsFirstNotZeroByteArrieved = false;
+
+                    for (j = 0; j < Bytes.Length; j++)
+                    {
+                        if (Bytes[j] != 0x00)
+                        {
+                            CODELenght++;
+                            IsFirstNotZeroByteArrieved = true;
+                        }
+                        else
+                        {
+                            if (IsFirstNotZeroByteArrieved)
+                            {
+                                CODELenght++;
+                            }
+                        }
+                    }
+                }
+
+                int[] CODE = new int[CODELenght];
+                int k = 0;
+
+                for (int i = 0; i < OpCodes.Length; i++)
+                {
+                    byte[] Bytes = new byte[4];
+                    Bytes = DivideINT(OpCodes[i]);
+                    IsFirstNotZeroByteArrieved = false;
+
+                    for (j = 0; j < Bytes.Length; j++)
+                    {
+                        if (Bytes[j] != 0x00)
+                        {
+                            CODE[k] = Bytes[j];
+                            k++;
+                            IsFirstNotZeroByteArrieved = true;
+                        }
+                        else
+                        {
+                            if (IsFirstNotZeroByteArrieved)
+                            {
+                                CODE[k] = Bytes[j];
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                if (ObjGen.GenerateObjectFile(OnlyFileName, DATA, CODE, out ObjectFile) == ResultStatus.OK)
                 {
                     IsObjectFileGenerated = true;
                 }
@@ -325,6 +378,17 @@ namespace x86_simple_compiler
                     IsObjectFileGenerated = false;
                 }
             }
+        }
+
+        private byte[] DivideINT(int v)
+        {
+            byte[] bytes = new byte[4];
+            bytes[0] = (byte)(v >> 24);
+            bytes[1] = (byte)(v >> 16);
+            bytes[2] = (byte)(v >> 8);
+            bytes[3] = (byte)(v);
+
+            return bytes;
         }
 
         private string RemoveFullPathAndGetOnlyName(string fileName)
