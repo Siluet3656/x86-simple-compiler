@@ -315,7 +315,7 @@ namespace x86_simple_compiler
                 ////Object file genetation
                 ObjectFileGenerator ObjGen = ObjectFileGenerator.Init();
                 bool IsFirstNotZeroByteArrieved = false;
-                int[] DATA = null;
+                int[] DATA = symtab.GetDataSegment();
                 int CODELenght = 0;
 
                 for (int i = 0; i < OpCodes.Length; i++)

@@ -288,6 +288,45 @@ namespace x86_simple_compiler.Controller
             }
             ObjectFile.Add((char)ClalcControlByte(ObjectFile, IdPosition));
 
+            CalculateRecordLenghtBytes((short)0x0B, out RecordLenghtLowByte, out RecordLenghtHighByte);
+
+            ObjectFile.Add((char)0x9C);
+            ObjectFile.Add((char)RecordLenghtLowByte);
+            ObjectFile.Add((char)RecordLenghtHighByte);
+            IdPosition = ObjectFile.Count - 1;
+
+            ObjectFile.Add((char)0xC4);
+            ObjectFile.Add((char)0x10);
+            ObjectFile.Add((char)0x14);
+            ObjectFile.Add((char)0x01);
+            ObjectFile.Add((char)0x02);
+            ObjectFile.Add((char)0xC4);
+            ObjectFile.Add((char)0x14);
+            ObjectFile.Add((char)0x14);
+            ObjectFile.Add((char)0x01);
+            ObjectFile.Add((char)0x02);
+            ObjectFile.Add((char)ClalcControlByte(ObjectFile, IdPosition));
+
+            CODESementRecordLenght = new byte[] { 0x02, 0x00, 0x00 };
+            CalculateRecordLenghtBytes((short)(3 + ControlByteLenght + DATA.Length), out RecordLenghtLowByte, out RecordLenghtHighByte);
+
+            ObjectFile.Add((char)0xA0);
+            IdPosition = ObjectFile.Count - 1;
+
+            ObjectFile.Add((char)RecordLenghtLowByte);
+            ObjectFile.Add((char)RecordLenghtHighByte);
+            for (int i = 0; i < CODESementRecordLenght.Length; i++)
+            {
+                ObjectFile.Add((char)CODESementRecordLenght[i]);
+            }
+            for (int i = 0; i < DATA.Length; i++)
+            {
+                ObjectFile.Add((char)DATA[i]);
+            }
+            ObjectFile.Add((char)ClalcControlByte(ObjectFile, IdPosition));
+
+            CalculateRecordLenghtBytes((short)0x0B, out RecordLenghtLowByte, out RecordLenghtHighByte);
+
             //4
             for (int i = 0; i < ObjectFileEnd.Length; i++)
             {

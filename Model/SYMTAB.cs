@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace x86_simple_compiler
 {
@@ -27,7 +28,10 @@ namespace x86_simple_compiler
     {
         private static SYMTAB single = null;
         private Dictionary<string, SymbolNameInfo> Table = new Dictionary<string, SymbolNameInfo>();
+        List<string> SymbolNames = new List<string>();
         private const int MaxLenght = 32;
+
+        private readonly string Mark = "MARK";
 
         public static SYMTAB Init()
         {
@@ -57,7 +61,7 @@ namespace x86_simple_compiler
                     Info.Type = "DWORD";
                     break;
                 case "MARK":
-                    SymbolName = SymbolName.Remove(SymbolName.Length - 1,1);
+                    SymbolName = SymbolName.Remove(SymbolName.Length - 1, 1);
                     break;
             }
 
@@ -70,6 +74,7 @@ namespace x86_simple_compiler
 
             if (Table.ContainsKey(SymbolName))
             {
+                SymbolNames.Add(SymbolName);
                 return ResultStatus.OK;
             }
 
@@ -140,6 +145,44 @@ namespace x86_simple_compiler
                 }
             }
             return ResultStatus.SymbolNameDoesNotExist;
+        }
+
+        internal int[] GetDataSegment()
+        {
+            SymbolNameInfo info;
+            string[] AllKeys = GetAllKeys();
+
+            int counter = 0;
+            for (int i = 0; i < Table.Count; i++)
+            {
+                Table.TryGetValue(AllKeys[i], out info);
+                if (info.Type != Mark)
+                {
+                    counter++;
+                }
+            }
+            int[] DataSegment = new int[counter];
+            
+            for (int i = 0; i < Table.Count; i++)
+            {
+                Table.TryGetValue(AllKeys[i], out info);
+                if (info.Type != Mark)
+                {
+                    DataSegment[i] = info.Value;
+                }
+            }
+
+            return DataSegment;
+        }
+
+        private string[] GetAllKeys()
+        {
+            string[] strings = new string[SymbolNames.Count];
+            for (int i = 0; i < SymbolNames.Count; i++)
+            {
+                strings[i] = SymbolNames[i];
+            }
+            return strings;
         }
     }
 }
