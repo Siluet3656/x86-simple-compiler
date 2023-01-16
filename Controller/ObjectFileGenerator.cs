@@ -52,7 +52,7 @@ namespace x86_simple_compiler.Controller
             return Single;
         }
 
-        public ResultStatus GenerateObjectFile(string FileName, out List<char> ObjectFile)
+        public ResultStatus GenerateObjectFile(string FileName,int[] DATA, int[] CODE, out List<char> ObjectFile)
         {
             ObjectFile = new List<char>();
 
@@ -264,6 +264,29 @@ namespace x86_simple_compiler.Controller
             ObjectFile.Add((char)NumberOfRegisterInServiceGroup);
             ObjectFile.Add((char)ClalcControlByte(ObjectFile, IdPosition));
             //3
+            byte[] Constata = { 0x88, 0x04, 0x00, 0x40, 0xA2, 0x01, 0x91 };
+            for (int i = 0; i < Constata.Length; i++)
+            {
+                ObjectFile.Add((char)Constata[i]);
+            }
+
+            byte[] CODESementRecordLenght = { 0x01, 0x00, 0x00 };
+            CalculateRecordLenghtBytes((short)(ControlByteLenght + 3 + CODE.Length),out RecordLenghtLowByte, out RecordLenghtHighByte);
+
+            ObjectFile.Add((char)0xA0);
+            IdPosition = ObjectFile.Count - 1;
+
+            ObjectFile.Add((char)RecordLenghtLowByte);
+            ObjectFile.Add((char)RecordLenghtHighByte);
+            for (int i = 0; i < CODESementRecordLenght.Length; i++)
+            {
+                ObjectFile.Add((char)CODESementRecordLenght[i]);
+            }
+            for (int i = 0; i < CODE.Length; i++)
+            {
+                ObjectFile.Add((char)CODE[i]);
+            }
+            ObjectFile.Add((char)ClalcControlByte(ObjectFile, IdPosition));
 
             //4
             for (int i = 0; i < ObjectFileEnd.Length; i++)
@@ -272,6 +295,12 @@ namespace x86_simple_compiler.Controller
             }
 
             return ResultStatus.OK;
+        }
+
+        private void CalculateRecordLenghtBytes(short RecordLenght, out byte recordLenghtLowByte, out byte recordLenghtHighByte)
+        {
+            recordLenghtHighByte = GetHightByte(RecordLenght);
+            recordLenghtLowByte = GetLowByte(RecordLenght);
         }
 
         private byte GetHightByte(short RecordLenght)

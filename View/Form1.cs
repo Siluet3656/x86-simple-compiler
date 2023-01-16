@@ -303,7 +303,8 @@ namespace x86_simple_compiler
                                         {
                                             disp = infoo.Adr - (CalculateAdr(Address, 10) + optab.GetOpLength(Operation));
                                         }
-                                        OpCodes[j] = OpCodes[j] + disp;
+                                        byte DsipByte = (byte)disp;
+                                        OpCodes[j] = OpCodes[j] + DsipByte;
                                         break;
                                 }
                                 j++;
@@ -313,7 +314,9 @@ namespace x86_simple_compiler
                 }
                 ////Object file genetation
                 ObjectFileGenerator ObjGen = ObjectFileGenerator.Init();
-                if (ObjGen.GenerateObjectFile(OnlyFileName, out ObjectFile) == ResultStatus.OK)
+                int[] DATA = { 0 };
+
+                if (ObjGen.GenerateObjectFile(OnlyFileName, DATA, OpCodes, out ObjectFile) == ResultStatus.OK)
                 {
                     IsObjectFileGenerated = true;
                 }
