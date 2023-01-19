@@ -10,11 +10,11 @@ XOR al,al
         NOP 
         NOP 
         NOP 
-        ROR al, 1 
-  M1: ROR bl, 9 
-        ADD al, bl 
-        ADD al, A 
-        ADD al, B 
+        ROR al,1 
+  M1: ROR bl,9 
+        ADD al,bl 
+        ADD al,A 
+        ADD al,B 
         JG M1 
         DEC bl 
         NOP 

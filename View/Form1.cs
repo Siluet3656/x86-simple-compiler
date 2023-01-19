@@ -87,6 +87,7 @@ namespace x86_simple_compiler
             int CurrentDataAddress = 0;
             int AmountOfArgs = 0;
             int OpsCounter = 0;
+            int OpLineNumber = 0;
 
             const string Main = "MAIN";
             const string End = "END";
@@ -184,6 +185,7 @@ namespace x86_simple_compiler
                         {
                             if (optab.GetCodeByName(LineParts[0]) == ResultStatus.OK)
                             {
+                                OpLineNumber++;
                                 Operation = LineParts[0];
                                 if (LineParts.Length > 1)
                                 {
@@ -301,7 +303,7 @@ namespace x86_simple_compiler
                                         SymbolNameInfo infoo;
                                         if (symtab.TryToGetSymbolNameInfo(LineParts[1], out infoo) == ResultStatus.OK)
                                         {
-                                            disp = infoo.Adr - (CalculateAdr(Address, 10) + optab.GetOpLength(Operation));
+                                            disp = infoo.Adr - (CalculateAdr(Address, OpLineNumber) + optab.GetOpLength(Operation));
                                         }
                                         byte DsipByte = (byte)disp;
                                         OpCodes[j] = OpCodes[j] + DsipByte;
